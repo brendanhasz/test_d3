@@ -28,7 +28,8 @@ function addGene() {
     // Add gene to internal list of displayed genes
     var gene_to_add = document.getElementById("geneInput").value;
     console.log(`Adding gene ${gene_to_add}`);
-    if (gene_to_add.length < 1) return false;
+    if (gene_to_add.length < 1) return false;  // ignore if input is empty
+    if (!(gene_to_add in gene_expression)) return false;  // ignore if invalid gene name
     if (!displayed_genes.has(gene_to_add)) {
         displayed_genes.add(gene_to_add);
     }
