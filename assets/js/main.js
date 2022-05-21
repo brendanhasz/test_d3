@@ -1,8 +1,9 @@
 /* Page load tasks and callbacks */
 
 // Load the CSV
-//var gene_expression = loadCSV("data.csv");  //TODO
-var gene_expression = loadCSV("https://raw.githubusercontent.com/brendanhasz/test_d3/main/data/data.csv");
+var gene_expression = loadCSV("data/data.csv");
+// NOTE: Need to use nonlocal link below when developing, otherwise CORS errors :roll_eyes:
+//var gene_expression = loadCSV("https://raw.githubusercontent.com/brendanhasz/test_d3/main/data/data.csv");
 
 // Keep track of which genes are being displayed
 var displayed_genes = new Set();
