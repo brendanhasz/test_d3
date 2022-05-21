@@ -43,8 +43,7 @@ function redrawGraph(id, gene_expression, displayed_genes){
             yLabel: "Gene expression",
             width: 600,
             height: 500,
-            color: d => d.color,  //doesn't work
-            duration: 750 // slow transition for demonstration
+            color: d => d.color
         }
     )
 
