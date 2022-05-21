@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+
+
+<head>
+
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v6.js"></script>
+
+    <!-- Script for autocompletion -->
+    <script src="assets/js/autocomplete.js"></script>
+
+    <!-- Script to load data -->
+    <script src="assets/js/load_csv.js"></script>
+
+    <!-- Script to render a bar chart -->
+    <script src="assets/js/bar_chart.js"></script>
+
+    <!-- Script to render the gene graph -->
+    <script src="assets/js/gene_graph.js"></script>
+
+</head>
+
+
+<body>
+
+    <!-- Gene input -->
+    <form autocomplete="off" onsubmit="addGene(); return false;">
+        <div class="autocomplete" style="width:300px;">
+          <input id="geneInput" type="text" name="geneInputText" placeholder="Enter a gene to compare">
+        </div>
+        <input type="submit" value="Compare!">
+    </form>
+    
+    <!-- Displayed genes -->
+    <div id="displayed_genes"></div>
+
+    <!-- Create a div where the graph will take place -->
+    <div id="bar_chart"></div>
+
+    <!-- Load the CSV, generate AutoComplete candidate list, and callback functions -->
+    <script>
+
+        // Load the CSV
+        //var gene_expression = loadCSV("data.csv");  //TODO
+        var gene_expression = loadCSV("https://raw.githubusercontent.com/brendanhasz/test_d3/main/data/data.csv");
+
+        // Keep track of which genes are being displayed
+        var displayed_genes = new Set();
+
+        // Set the autocomplete candidates to the gene names
+        autocomplete(document.getElementById("geneInput"), Object.keys(gene_expression));
+
+
+        /* Update the displayed list of genes */
+        function updateGeneTagList(genes) {
+            var genes_div = document.getElementById("displayed_genes");
+            genes_div.innerHTML = "";
+            for (let gene of genes) {
+                genes_div.innerHTML += `<a onclick=\"removeGene('${gene}')\" style=\"cursor: pointer;\" class=\"genetag\"> ${gene} <span style=\"color:red\">&#10006</span> </a>`;
+            }
+        }
+
+
+        /* Add a gene to the plot */
+        function addGene() {
+            
+            // Add gene to internal list of displayed genes
+            var gene_to_add = document.getElementById("geneInput").value;
+            console.log(`Adding gene ${gene_to_add}`);
+            if (gene_to_add.length < 1) return false;
+            if (!displayed_genes.has(gene_to_add)) {
+                displayed_genes.add(gene_to_add);
+            }
+            console.log("Updated list of genes:");
+            console.log(displayed_genes);
+
+            // Add to displayed list
+            updateGeneTagList(displayed_genes);
+
+            // Reset and redraw graph
+            redrawGraph("#bar_chart", gene_expression, displayed_genes)
+
+            // Reset input
+            document.getElementById("geneInput").value = "";
+        }
+
+
+        /* Remove a gene from the plot */
+        function removeGene(gene_to_remove) {
+            
+            // Remove gene from list of displayed genes
+            console.log(`Removing gene ${gene_to_remove}`);
+            displayed_genes.delete(gene_to_remove)
+            console.log(`Updated list of genes: ${displayed_genes}`);
+
+           // Add to displayed list
+           updateGeneTagList(displayed_genes);
+
+            // Reset and redraw graph
+            redrawGraph("#bar_chart", gene_expression, displayed_genes)
+
+            // Reset input
+            document.getElementById("geneInput").value = "";
+        }
+
+        
+    </script>
+
+</body>
+
+
+</html>
